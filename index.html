@@ -1,0 +1,136 @@
+<html>
+    <head>
+        <title>BALL RUN</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <canvas id="canvas" width="800" height="350"></canvas>
+        <script>
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");  
+            const dificult = 1;
+            const screen = {
+                w:800,
+                h:350
+            }
+
+            const flow = {
+                x:0,
+                y:300,
+                w:800,
+                h:50,
+
+                draw:function(){
+                    context.fillStyle="pink"
+                    context.fillRect(this.x, this.y, this.w, this.h)
+                }
+            }
+           
+            const obstacules ={
+                obstacule:[],
+                time:0,
+                add:function(){
+                    let colors = ["red", "green", "black"];
+                    let w = 20+Math.floor(Math.random() *30);
+                    let h = 10+Math.floor(Math.random() *80);
+                    let x = screen.w + Math.floor(Math.random() *50);
+                    let y = screen.h - h - flow.h;
+                    let speed = 3 + Math.floor(Math.random() *dificult)
+                    this.obstacule.push({x:x, y:y, w:w, h:h, cor:colors[Math.floor(Math.random()*colors.length)],speed:speed})
+                },
+
+                draw:function(){
+                    for(let i = 0; i < this.obstacule.length; i++){
+                        context.fillStyle = this.obstacule[i].cor;
+                        context.fillRect(this.obstacule[i].x,this.obstacule[i].y,this.obstacule[i].w,this.obstacule[i].h);
+                    }
+                },
+
+                update:function(){
+                    if(this.time == 0){
+                        this.add()
+                        this.time = 80
+                    }
+                    var remove = [];
+                    for(let i = 0; i < this.obstacule.length; i++){
+                        this.obstacule[i].x -=this.obstacule[i].speed;
+                        if(this.obstacule[i].x < -30){
+                            remove.push(this.obstacule[i])
+                        }
+                    }
+                    if(remove.length > 0){
+                        for(let i = 0; i < remove.length ; i++){
+                            this.obstacule.splice(i,1);
+                        }
+                    }
+                    this.time--
+                }
+               
+            }
+
+            const player = {
+                x:50,
+                y:20,
+                w:25,
+                h:25,
+                speed:0,
+                jumpForce:10,
+                jumpTime: 2,
+                gravity:0.5,
+
+                draw: function(){
+                    context.fillStyle="red"
+                    context.fillRect(this.x, this.y, this.w, this.h)
+                },
+
+                update : function(){
+                    this.speed += this.gravity;
+                    this.y += this.speed;
+
+                    if(this.y > (screen.h - player.h - flow.h)){
+                        this.y = screen.h - player.h - flow.h;
+                        this.speed = 0;
+                        this.jumpTime = 2;
+                    }
+                },
+
+                jump : function(event){
+                    if(event == " " && this.jumpTime > 0){
+                        this.speed -= this.jumpForce;
+                        this.jumpTime--;
+                    }
+                }
+
+            }
+
+            function  handleKeyboard(event){
+                player.jump(event.key);
+            }
+
+
+            function draw(){
+                context.fillStyle = "blue"
+                context.fillRect(0,0,800,400);
+
+                obstacules.draw()
+                player.draw()
+                flow.draw()
+            }
+
+            function update(){
+                player.update()
+                obstacules.update()
+            }
+
+            function renderGame(){
+                update()
+                draw();
+                window.requestAnimationFrame(renderGame)
+            }
+            document.addEventListener("keydown", handleKeyboard);
+            renderGame();
+            
+        </script>
+    </body>
+</html>
