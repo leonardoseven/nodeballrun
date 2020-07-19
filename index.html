@@ -26,49 +26,6 @@
                     context.fillRect(this.x, this.y, this.w, this.h)
                 }
             }
-           
-            const obstacules ={
-                obstacule:[],
-                time:0,
-                add:function(){
-                    let colors = ["red", "green", "black"];
-                    let w = 20+Math.floor(Math.random() *30);
-                    let h = 10+Math.floor(Math.random() *80);
-                    let x = screen.w + Math.floor(Math.random() *50);
-                    let y = screen.h - h - flow.h;
-                    let speed = 3 + Math.floor(Math.random() *dificult)
-                    this.obstacule.push({x:x, y:y, w:w, h:h, cor:colors[Math.floor(Math.random()*colors.length)],speed:speed})
-                },
-
-                draw:function(){
-                    for(let i = 0; i < this.obstacule.length; i++){
-                        context.fillStyle = this.obstacule[i].cor;
-                        context.fillRect(this.obstacule[i].x,this.obstacule[i].y,this.obstacule[i].w,this.obstacule[i].h);
-                    }
-                },
-
-                update:function(){
-                    if(this.time == 0){
-                        this.add()
-                        this.time = 80
-                    }
-                    var remove = [];
-                    for(let i = 0; i < this.obstacule.length; i++){
-                        this.obstacule[i].x -=this.obstacule[i].speed;
-                        if(this.obstacule[i].x < -30){
-                            remove.push(this.obstacule[i])
-                        }
-                    }
-                    if(remove.length > 0){
-                        for(let i = 0; i < remove.length ; i++){
-                            this.obstacule.splice(i,1);
-                        }
-                    }
-                    this.time--
-                }
-               
-            }
-
             const player = {
                 x:50,
                 y:20,
@@ -103,6 +60,57 @@
                 }
 
             }
+           
+            const obstacules ={
+                obstacule:[],
+                time:0,
+                add:function(){
+                    let colors = ["red", "green", "black"];
+                    let w = 20+Math.floor(Math.random() *30);
+                    let h = 10+Math.floor(Math.random() *80);
+                    let x = screen.w + Math.floor(Math.random() *50);
+                    let y = screen.h - h - flow.h;
+                    let speed = 3 + Math.floor(Math.random() *dificult)
+                    this.obstacule.push({x:x, y:y, w:w, h:h, cor:colors[Math.floor(Math.random()*colors.length)],speed:speed})
+                },
+
+                draw:function(){
+                    for(let i = 0; i < this.obstacule.length; i++){
+                        context.fillStyle = this.obstacule[i].cor;
+                        context.fillRect(this.obstacule[i].x,this.obstacule[i].y,this.obstacule[i].w,this.obstacule[i].h);
+                    }
+                },
+
+                update:function(){
+                    if(this.time == 0){
+                        this.add()
+                        this.time = 80
+                    }
+                    var remove = [];
+                    for(let i = 0; i < this.obstacule.length; i++){
+                        this.obstacule[i].x -=this.obstacule[i].speed;
+                        if(this.obstacule[i].x < -30){
+                            remove.push(this.obstacule[i])
+                        }
+                        if(((player.y+player.h) >= this.obstacule[i].y) && (((player.x + player.w) >= this.obstacule[i].x) && (player.x <= (this.obstacule[i].x + this.obstacule[i].w)))){
+                            console.log("game over 1")
+                        }else if(((player.x + player.h) == this.obstacule[i].x) && ((player.y+player.h) >= this.obstacule[i].y)){
+                            console.log("game over 2")
+                        }
+                        
+                    }
+                    if(remove.length > 0){
+                        for(let i = 0; i < remove.length ; i++){
+                            this.obstacule.splice(i,1);
+                        }
+                    }
+                    this.time--
+                }
+               
+                
+            }
+
+          
 
             function  handleKeyboard(event){
                 player.jump(event.key);
