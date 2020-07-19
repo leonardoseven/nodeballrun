@@ -13,7 +13,7 @@
         </div>
         <canvas id="canvas" width="800" height="350"></canvas>
         <br>
-        <h3>Press Space to jump</h3>
+        <h3>Press mouse click to jump</h3>
         <script>
             var canvas = document.getElementById("canvas");
             var context = canvas.getContext("2d");  
@@ -90,7 +90,7 @@
                 },
 
                 jump : function(event){
-                    if(event == " " && this.jumpTime > 0){
+                    if(this.jumpTime > 0){
                         this.speed -= this.jumpForce;
                         this.jumpTime--;
                     }
@@ -176,7 +176,7 @@
                 window.requestAnimationFrame(renderGame)
             }
             draw();
-            document.addEventListener("keydown", handleKeyboard);
+            document.addEventListener("mousedown", handleKeyboard);
             
         </script>
     </body>
