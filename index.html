@@ -5,16 +5,45 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        <div>
+            <h1>Square Run</h1>
+            <button id="buttonStart" onclick="gameStart()">start Game</button>
+            <button id="buttonStart" onclick="restart()">Restart</button>
+
+        </div>
         <canvas id="canvas" width="800" height="350"></canvas>
+        <br>
+        <h3>Press Space to jump</h3>
         <script>
             var canvas = document.getElementById("canvas");
             var context = canvas.getContext("2d");  
+            var gameStatus = 0;
+            var score = 0;
+
             const dificult = 1;
             const screen = {
                 w:800,
                 h:350
             }
+            function restart(){
+                window.location.href =  window.location
+            }
+            function gameStart(){
+                gameStatus = 1;
+                document.getElementById("buttonStart").style="display:none"
+                renderGame()
+            }
+            
+            function gameOver(){
+                gameStatus = 2;
+            }
 
+            function gameOverDraw(){
+                context.fillStyle="black"
+                context.font = "30px Arial";
+                context.textAlign = "center";
+                context.fillText("Game Over", screen.w/2, screen.h/2);
+            }
             const flow = {
                 x:0,
                 y:300,
@@ -39,6 +68,14 @@
                 draw: function(){
                     context.fillStyle="red"
                     context.fillRect(this.x, this.y, this.w, this.h)
+                    context.fillStyle="black"
+                    context.font = "30px Arial";
+                    context.textAlign = "center";
+                    context.fillText("Jumps: " +this.jumpTime, 700, 50);
+                    context.fillStyle="black"
+                    context.font = "30px Arial";
+                    context.textAlign = "center";
+                    context.fillText("Score: " +score, 400, 50);
                 },
 
                 update : function(){
@@ -89,13 +126,11 @@
                     var remove = [];
                     for(let i = 0; i < this.obstacule.length; i++){
                         this.obstacule[i].x -=this.obstacule[i].speed;
-                        if(this.obstacule[i].x < -30){
+                        if(this.obstacule[i].x < -50){
                             remove.push(this.obstacule[i])
                         }
                         if(((player.y+player.h) >= this.obstacule[i].y) && (((player.x + player.w) >= this.obstacule[i].x) && (player.x <= (this.obstacule[i].x + this.obstacule[i].w)))){
-                            console.log("game over 1")
-                        }else if(((player.x + player.h) == this.obstacule[i].x) && ((player.y+player.h) >= this.obstacule[i].y)){
-                            console.log("game over 2")
+                            gameOver();
                         }
                         
                     }
@@ -120,10 +155,11 @@
             function draw(){
                 context.fillStyle = "blue"
                 context.fillRect(0,0,800,400);
-
                 obstacules.draw()
                 player.draw()
                 flow.draw()
+                if(gameStatus == 2)
+                    gameOverDraw()
             }
 
             function update(){
@@ -132,12 +168,15 @@
             }
 
             function renderGame(){
-                update()
+                if(gameStatus == 1){
+                    update()
+                    score++
+                }
                 draw();
                 window.requestAnimationFrame(renderGame)
             }
+            draw();
             document.addEventListener("keydown", handleKeyboard);
-            renderGame();
             
         </script>
     </body>
