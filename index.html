@@ -2,7 +2,33 @@
     <head>
         <title>BALL RUN</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+        <style>
+            @media screen and (max-width: 752px) {
+            #canvas {
+               width: 650;
+               height: 350;
+               text-align: center;
+            }
+
+         }
+         @media screen and (max-width: 652px) {
+            #canvas {
+               width: 400;
+               height: 350;
+               text-align: center;
+            }
+
+         }
+         @media screen and (max-width: 452px) {
+            #canvas {
+               width: 320;
+               height: 350;
+               text-align: center;
+            }
+
+         }
+        </style>
     </head>
     <body>
         <div>
@@ -19,12 +45,14 @@
             var context = canvas.getContext("2d");  
             var gameStatus = 0;
             var score = 0;
-
+          
             const dificult = 1;
-            const screen = {
+            const  screen = {
                 w:800,
                 h:350
             }
+            
+            
             function restart(){
                 window.location.href =  window.location
             }
@@ -71,11 +99,11 @@
                     context.fillStyle="black"
                     context.font = "30px Arial";
                     context.textAlign = "center";
-                    context.fillText("Jumps: " +this.jumpTime, 700, 50);
+                    context.fillText("Jumps: " +this.jumpTime, screen.w -100, 50);
                     context.fillStyle="black"
                     context.font = "30px Arial";
                     context.textAlign = "center";
-                    context.fillText("Score: " +score, 400, 50);
+                    context.fillText("Score: " +score, screen.w -300, 50);
                 },
 
                 update : function(){
